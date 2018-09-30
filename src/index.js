@@ -5,6 +5,7 @@ import "semantic-ui-css/semantic.min.css";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import decode from "jwt-decode";
 import { composeWithDevTools } from "redux-devtools-extension";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
@@ -16,8 +17,13 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(thunk))
 );
 
-if (localStorage.bookwormJWT) {
-  const user = { token: localStorage.bookwormJWT };
+if (localStorage.openknowledgeJWT) {
+  const payload = decode(localStorage.openknowledgeJWT);
+  const user = {
+    token: localStorage.openknowledgeJWT,
+    email: payload.email,
+    confirmed: payload.confirmed
+  };
   store.dispatch(userLoggedIn(user));
 }
 
